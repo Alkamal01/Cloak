@@ -2,12 +2,15 @@
 
 # dependencies
 node_modules/
+mobile/node_modules/
 
 # Expo
 .expo/
+mobile/.expo/
 dist/
 web-build/
 expo-env.d.ts
+mobile/expo-env.d.ts
 
 # Native
 .kotlin/
@@ -33,11 +36,16 @@ yarn-error.*
 # local env files
 .env
 .env*.local
+mobile/.env
+mobile/.env*.local
 
 # generated build output
 cache/
 contracts-out/
 target/
+backend/cache/
+backend/contracts-out/
+backend/target/
 
 # typescript
 *.tsbuildinfo
@@ -45,3 +53,4 @@ target/
 # generated native folders
 /ios
 /android
+/mobile/ios
