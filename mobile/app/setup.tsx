@@ -7,6 +7,7 @@ import { useTheme } from '@/contexts/ThemeContext';
 import { useWallet } from '@/contexts/WalletContext';
 import Logo from '@/components/Logo';
 import ActionButton from '@/components/ActionButton';
+import { registerIdentity } from '@/lib/api';
 
 const DEFAULT_RECOVERY = 'Alice';
 
@@ -21,7 +22,8 @@ export default function Setup() {
     setLoading(true);
     try {
       await new Promise((r) => setTimeout(r, 700));
-      await createWallet(name.trim() || DEFAULT_RECOVERY);
+      const identity = await createWallet(name.trim() || DEFAULT_RECOVERY);
+      await registerIdentity(identity).catch(() => undefined);
       router.replace('/home');
     } catch (e) {
       Alert.alert('Setup Error', 'Could not create your local identity. Please try again.');
@@ -44,12 +46,12 @@ export default function Setup() {
           <Text style={{ color: theme.text }} className="text-2xl font-black text-center">
             Create your Cloak identity
           </Text>
-          <Text style={{ color: theme.textSecondary }} className="text-sm text-center mt-3 leading-5">
+          <Text style={{ color: theme.textSecondary }} className="text-base text-center mt-3 leading-5">
             Cloak uses a portable cryptographic identity for proof requests, disclosures, and private receipts.
           </Text>
 
           <View className="w-full mt-8">
-            <Text style={{ color: theme.textSecondary }} className="text-xs font-semibold uppercase tracking-wide mb-2">
+            <Text style={{ color: theme.textSecondary }} className="text-base font-semibold uppercase tracking-wide mb-2">
               Display name
             </Text>
             <TextInput

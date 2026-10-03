@@ -13,6 +13,7 @@
       "bundleIdentifier": "com.cloak.app",
       "infoPlist": {
         "NSFaceIDUsageDescription": "Cloak uses Face ID to protect access to your private receipts and identity keys.",
+        "NSCameraUsageDescription": "Cloak uses the camera to scan identity QR codes.",
         "NFCReaderUsageDescription": "Cloak may use NFC to exchange public identities with nearby devices."
       }
     },
@@ -33,6 +34,7 @@
     },
     "plugins": [
       "expo-router",
+      "expo-camera",
       [
         "expo-splash-screen",
         {
@@ -45,7 +47,10 @@
           }
         }
       ],
-      "expo-secure-store"
+      "expo-secure-store",
+      "expo-font",
+      "expo-image",
+      "expo-status-bar"
     ],
     "experiments": {
       "typedRoutes": true

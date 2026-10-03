@@ -96,6 +96,38 @@ export const people: CloakIdentity[] = [
   },
 ];
 
+export function identityQrPayload(identity: CloakIdentity = localIdentity) {
+  const params = new URLSearchParams({
+    protocol: 'cloak-identity',
+    version: 'v0.1',
+    id: identity.id,
+    name: identity.displayName,
+    npub: identity.npub,
+    key: identity.publicKey,
+  });
+  return `https://cloak.app/identity?${params.toString()}`;
+}
+
+export function parseIdentityQrPayload(value: string): CloakIdentity | null {
+  try {
+    if (value.startsWith('https://cloak.app/identity?')) {
+      const params = new URL(value).searchParams;
+      if (params.get('protocol') !== 'cloak-identity' || params.get('version') !== 'v0.1') return null;
+      const id = params.get('id');
+      const displayName = params.get('name');
+      const npub = params.get('npub');
+      const publicKey = params.get('key');
+      if (!id || !displayName || !npub || !publicKey) return null;
+      return { id, displayName, npub, publicKey, establishedMonths: 0, relationship: 'Unknown' };
+    }
+    const parsed = JSON.parse(value) as Partial<CloakIdentity> & { protocol?: string; version?: string };
+    if (parsed.protocol !== 'cloak-identity' || parsed.version !== 'v0.1' || !parsed.id || !parsed.displayName || !parsed.npub || !parsed.publicKey) return null;
+    return { id: parsed.id, displayName: parsed.displayName, npub: parsed.npub, publicKey: parsed.publicKey, establishedMonths: 0, relationship: 'Unknown' };
+  } catch {
+    return null;
+  }
+}
+
 function canonicalReceipt(receipt: ProofTradeReceipt) {
   return JSON.stringify({
     version: receipt.version,

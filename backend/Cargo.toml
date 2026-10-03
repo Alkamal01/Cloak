@@ -4,6 +4,7 @@ members = [
     "crates/prooftrade-core",
     "crates/prooftrade-nostr",
     "crates/prooftrade-wasm",
+    "crates/cloak-api",
 ]
 
 [workspace.package]
@@ -21,3 +22,6 @@ hex = "0.4"
 chacha20poly1305 = "0.10"
 x25519-dalek = { version = "2", features = ["static_secrets"] }
 wasm-bindgen = "0.2"
+axum = "0.8"
+tokio = { version = "1", features = ["full"] }
+tower-http = { version = "0.6", features = ["cors"] }

@@ -2,19 +2,21 @@ import React from 'react';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
-import { Bell, FileSignature, QrCode, ScanLine, ShieldCheck, Users } from 'lucide-react-native';
+import { Bell, FileSignature, QrCode, ScanLine, ShieldCheck } from 'lucide-react-native';
 import { useTheme } from '@/contexts/ThemeContext';
 import ActionButton from '@/components/ActionButton';
-import { localIdentity } from '@/lib/prooftrade/fixtures';
+import { useWallet } from '@/contexts/WalletContext';
 
 function Stat({ label, value }: { label: string; value: string }) {
   const { theme } = useTheme();
+  const { wallet } = useWallet();
+  if (!wallet) return null;
   return (
     <View style={{ backgroundColor: theme.inputBg }} className="flex-1 rounded-2xl px-4 py-3">
       <Text style={{ color: theme.text }} className="text-lg font-black">
         {value}
       </Text>
-      <Text style={{ color: theme.textMuted }} className="text-xs mt-1">
+      <Text style={{ color: theme.textMuted }} className="text-base mt-1">
         {label}
       </Text>
     </View>
@@ -24,6 +26,8 @@ function Stat({ label, value }: { label: string; value: string }) {
 export default function Home() {
   const router = useRouter();
   const { theme } = useTheme();
+  const { wallet } = useWallet();
+  if (!wallet) return null;
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.background }}>
@@ -34,7 +38,7 @@ export default function Home() {
               <Text style={{ color: theme.text }} className="text-3xl font-black">
                 Cloak
               </Text>
-              <Text style={{ color: theme.textSecondary }} className="text-sm mt-1">
+              <Text style={{ color: theme.textSecondary }} className="text-base mt-1">
                 Verify trust. Reveal less.
               </Text>
             </View>
@@ -51,17 +55,17 @@ export default function Home() {
                 </View>
                 <View className="flex-1">
                   <Text style={{ color: theme.text }} className="text-lg font-black">
-                    {localIdentity.displayName}
+                    {wallet.displayName}
                   </Text>
-                  <Text style={{ color: theme.textMuted }} className="text-xs font-mono" numberOfLines={1}>
-                    {localIdentity.npub}
+                  <Text style={{ color: theme.textMuted }} className="text-base font-mono" numberOfLines={1}>
+                    {wallet.npub}
                   </Text>
                 </View>
               </View>
               <View className="flex-row gap-3 mt-5">
-                <Stat label="Identity age" value={`${localIdentity.establishedMonths} mo`} />
-                <Stat label="Stored proofs" value="3" />
-                <Stat label="Pending" value="2" />
+                <Stat label="Identity age" value={`${wallet.establishedMonths} mo`} />
+                <Stat label="Stored proofs" value="0" />
+                <Stat label="Pending" value="0" />
               </View>
             </View>
           </View>
@@ -84,30 +88,15 @@ export default function Home() {
             <Text style={{ color: theme.text }} className="text-lg font-black mb-3">
               Pending
             </Text>
-            <View style={{ backgroundColor: theme.surface, borderColor: theme.border }} className="rounded-3xl border overflow-hidden">
-              {[
-                ['Alice is requesting trust evidence', 'Choose which receipts to disclose'],
-                ['Receipt proposal from Bob Electronics', 'Review outcome before signing'],
-              ].map(([title, subtitle], index) => (
-                <View key={title} style={{ borderTopColor: index ? theme.border : 'transparent' }} className="px-5 py-4 border-t">
-                  <View className="flex-row items-center gap-3">
-                    <Users size={17} color={theme.accent} />
-                    <View className="flex-1">
-                      <Text style={{ color: theme.text }} className="text-sm font-bold">
-                        {title}
-                      </Text>
-                      <Text style={{ color: theme.textMuted }} className="text-xs mt-1">
-                        {subtitle}
-                      </Text>
-                    </View>
-                  </View>
-                </View>
-              ))}
+            <View style={{ backgroundColor: theme.surface, borderColor: theme.border }} className="rounded-3xl border p-5">
+              <Text style={{ color: theme.textSecondary }} className="text-base leading-6">
+                Nothing is waiting for you. Proof requests and receipt proposals will appear here when someone sends them.
+              </Text>
             </View>
           </View>
 
           <View className="px-6 mt-8">
-            <Text style={{ color: theme.textSecondary }} className="text-sm leading-5">
+            <Text style={{ color: theme.textSecondary }} className="text-base leading-5">
               Private by default. Public by choice. Cloak presents signed evidence; people decide what it means.
             </Text>
           </View>
